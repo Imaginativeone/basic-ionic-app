@@ -4,7 +4,7 @@ const useSQLiteDB = () => {
 
   const [ initialized, setInitialized ] = useState<boolean>(false)
 
-  const performSQLAction = async () => {}
+  const performSQLAction = async (databaseFunction:any) => {}
 
   return {
     initialized,

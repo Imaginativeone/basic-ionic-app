@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { SQLiteDBConnection } from '@capacitor-community/sqlite'
+import { SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite'
 import useSQLiteDB from '../composables/useSQLiteDB'
 
 import './Home.css'
@@ -12,6 +12,8 @@ type SQLitem = {
 
 const Home = () => {
 
+  const [items, setItems] = useState<Array<SQLitem>>()
+
   // SQLite DB Hook
   const { initialized, performSQLAction } = useSQLiteDB()
 
@@ -22,9 +24,19 @@ const Home = () => {
   const loadData = async () => {
     try {
       console.log('Data is being loaded here...');
+
+      // query the database
+      performSQLAction(async (db: SQLiteDBConnection | undefined) => {
+        const selectionResponse = await db?.query(`SELECT * FROM test`)
+        if (selectionResponse) {
+          setItems(selectionResponse.values)
+        }
+      })
     }
-    catch (e) {
-      console.log('Error loading data:', e)
+    catch (error) {
+      console.log('Error loading data:', error)
+      alert((error as Error).message)
+      setItems([])
     }
   }
 
